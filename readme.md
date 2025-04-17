@@ -106,19 +106,30 @@ def parse(self, response):
 # scrapy.cfgが存在するディレクトリで実行する
 # quotesはname属性に指定した値
 scrapy crawl quotes
+```
 
+### 出力の指定
+
+```bash
 # JSONファイルとして保存
 scrapy crawl quotes -O quotes.json
 
 # CSVファイルとして保存
 scrapy crawl quotes -O quotes.csv
 
-# JSONLinesファイルとして保存
+# JSONLファイルとして保存
 scrapy crawl quotes -O quotes.jsonl
+# 途中で処理が終了された場合、JSONファイルだと最後の ] が書き込まれない可能性がある
+# この状態のJSONファイルは「不完全」で、標準のJSONパーサーで読み込もうとするとエラーになる
+# その点、JSONLファイルは1行ずつ{}で区切られるので大規模データをクロールするのに適している
 
 # 上書き保存: -O
 # 追加保存: -o
+```
 
+### ログの指定
+
+```bash
 # 重要なメッセージのみ表示
 scrapy crawl quotes --loglevel=WARNING
 
@@ -131,12 +142,16 @@ scrapy crawl quotes --logfile=quotes_spider.log
 
 ## Scrapy Shell
 
-対話的に要素を探索するためのツール
+対話的にデータ抽出を試すためのツール
 
 ```bash
 # URLを指定してシェルを起動
 scrapy shell "https://quotes.toscrape.com"
-# シェルが起動すると、responseオブジェクトを使って要素を探索できる
+# シェルが起動すると以下のオブジェクトを使って要素を抽出できる
+
+# response: HTTPレスポンスオブジェクト
+# request: HTTPリクエストオブジェクト
+# spider: 仮想的なスパイダーインスタンス
 
 # タイトルを取得
 response.css('title::text').get()
